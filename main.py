@@ -99,12 +99,12 @@ hp_bar = healthbar_dynamtic()
 
 
 class Enemy(Entity):
-    global hp_bar
+    global hp_bar, wave
     def __init__(self, **kwargs):
         global zombies_remaining, zombies_remaining_ui_counter, wave
         super().__init__(parent=shootables_parent, model='cube', origin_y=-.5, scale_y=2, color=color.light_gray, collider='box', **kwargs)
         self.health_bar = Entity(parent=self, y=1.2, model='cube', color=color.red, world_scale=(1.5,.1,.1))
-        self.max_hp = 70
+        self.max_hp = 70 + (wave * 3)
         self.hp = self.max_hp
         zombies_remaining = zombies_remaining + 1
         zombies_remaining_ui_counter.text = str(zombies_remaining)
@@ -122,7 +122,8 @@ class Enemy(Entity):
 
 
         self.health_bar.alpha = max(0, self.health_bar.alpha - time.dt)
-        self.position += self.forward * time.dt * 5
+        self.position += self.forward * time.dt * 5 * (wave * 0.2)
+        print("zombie speed = " + str(5 * (wave * 0.2)))
 
         self.look_at_2d(player.position, 'y')
         #hit_info = raycast(self.world_position + Vec3(0,1,0), self.forward, 30, ignore=(self,))
