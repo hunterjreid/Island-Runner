@@ -8,10 +8,10 @@ from random import randint
 
 app = Ursina()
 
-player_speed_multiplier = 3.5
+player_speed_multiplier = 1.25
 
 zombies_remaining = 0
-wave = 1
+wave = 0
 
 random.seed(randint(1,100))
 Entity.default_shader = lit_with_shadows_shader
@@ -198,7 +198,7 @@ def send_new_wave():
     #LOGIC TO SEND NEW WAVE
     global wave, enemies
     difficulty = 4
-    if wave < 30:
+    if wave < 80:
         enemies = [Enemy(x=x+randint(-50,50), z=x+randint(-50,50)) for x in range(wave*difficulty)]
         wave = wave+1
         print(len(enemies))
