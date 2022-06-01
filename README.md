@@ -1,4 +1,4 @@
-[3d renders](https://user-images.githubusercontent.com/62681404/171349496-868651c5-3602-497f-8714-a8bde739ec5b.png)
+![Guns](https://user-images.githubusercontent.com/62681404/171349675-809e2ec0-64ac-44cc-a894-d2da9ba01783.png)
 # island-runner due 27th extended till 3rd
 a Yoobee Colleges project 🐱‍🐉
 **--------------------------------------------**
@@ -7,4 +7,5 @@ a Yoobee Colleges project 🐱‍🐉
 - add shop
 - add textures!
 
-![ewqeqeqe](https://user-images.githubusercontent.com/62681404/171349584-1f49cb04-f479-4bab-9c51-4de359434b11.png)
+
+
