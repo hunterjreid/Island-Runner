@@ -1,8 +1,10 @@
 ![EQWEQWEQEQ](https://user-images.githubusercontent.com/62681404/171524763-b12a83c3-22ec-41cd-9e1b-862e13154af0.png)
 
-# island-runner due 27th extended till 3rd
-a Yoobee Colleges project 🐱‍🐉
+# island-runner
+a Yoobee Colleges project 🐱‍🐉 due 27th extended till 3rd 🎁
 **--------------------------------------------**
+Can you survive the Island?
+
 - add xp system
 - add money system
 - add shop
