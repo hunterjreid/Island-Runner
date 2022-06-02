@@ -180,7 +180,7 @@ def shoot():
             invoke(tommy.muzzle_flash.disable, delay=.05)
             invoke(setattr, tommy, 'on_cooldown', False, delay=tommygun_rate_of_fire)
             if mouse.hovered_entity and hasattr(mouse.hovered_entity, 'hp'):
-                mouse.hovered_entity.hp -= tommygun_dmg
+                mouse.hovered_entity.hp -= 40
                 mouse.hovered_entity.blink(color.red)
     elif gun_selected == "sniper":
         if not sniper.on_cooldown:
@@ -192,7 +192,7 @@ def shoot():
             invoke(sniper.muzzle_flash.disable, delay=.05)
             invoke(setattr, sniper, 'on_cooldown', False, delay=sniper_rate_of_fire)
             if mouse.hovered_entity and hasattr(mouse.hovered_entity, 'hp'):
-                mouse.hovered_entity.hp -= sniper_dmg
+                mouse.hovered_entity.hp -= 300
                 mouse.hovered_entity.blink(color.red)
     elif gun_selected == "m249":
         if not bossgun.on_cooldown:
@@ -204,11 +204,16 @@ def shoot():
             invoke(bossgun.muzzle_flash.disable, delay=.05)
             invoke(setattr, bossgun, 'on_cooldown', False, delay=bossgun_rate_of_fire)
             if mouse.hovered_entity and hasattr(mouse.hovered_entity, 'hp'):
-                mouse.hovered_entity.hp -= bossgun_dmg
+                mouse.hovered_entity.hp -= 80
                 mouse.hovered_entity.blink(color.red)
 #enable ak func
 def ak47():
-    global buy_screen, gun_selected
+    global buy_screen, gun_selected, money, money_counter
+    if money < 2500:
+        return
+    
+    money = money - 2500
+    money_counter.text = "$"+ str(money)
 
     gun_selected = "ak47"
     shop_bg.visible = not shop_bg.visible
@@ -286,9 +291,7 @@ def pistol():
 #smg
 def submachine_gun_selected():
     global buy_screen, gun_selected, money, money_counter
-    print(money)
     if money < 1000:
-        print("no money")
         return
     
     money = money - 1000
@@ -327,6 +330,12 @@ def submachine_gun_selected():
     knife.visible = False
 #tommy gun
 def tommy_gun_selected():
+    global buy_screen, gun_selected, money, money_counter
+    if money < 5000:
+        return
+    
+    money = money - 5000
+    money_counter.text = "$"+ str(money)
     global buy_screen, gun_selected
     gun_selected = "tommygun"
     shop_bg.visible = not shop_bg.visible
@@ -362,7 +371,12 @@ def tommy_gun_selected():
     knife.visible = False
 #sniper
 def sniper_gun():
-    global buy_screen, gun_selected
+    global buy_screen, gun_selected, money, money_counter
+    if money < 10000:
+        return
+    
+    money = money - 10000
+    money_counter.text = "$"+ str(money)
     gun_selected = "sniper"
     shop_bg.visible = not shop_bg.visible
     invoke(buy_screen_pause_invoker,delay=.25)
@@ -397,7 +411,12 @@ def sniper_gun():
     knife.visible = False
 #zombie gun
 def m249():
-    global buy_screen, gun_selected
+    global buy_screen, gun_selected, money, money_counter
+    if money < 30000:
+        return
+    
+    money = money - 30000
+    money_counter.text = "$"+ str(money)
     gun_selected = "m249"
     shop_bg.visible = not shop_bg.visible
     invoke(buy_screen_pause_invoker,delay=.25)
@@ -597,7 +616,7 @@ def play_new_game():
     player.position = (0,15,0)
     zombies_remaining = 0
     wave = -1
-    money = 0
+    money = 999990
     money_counter.text = "$"+ str(money)
     hpleft = 0.22
     healthbar_dynamtic.max_health(hp_bar)
