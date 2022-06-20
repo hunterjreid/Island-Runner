@@ -1,9 +1,10 @@
 #prerequisites
-from wave import Wave_read
 from ursina import *
 from ursina.prefabs.first_person_controller import FirstPersonController
 from ursina.shaders import lit_with_shadows_shader
 from random import randint
+import webbrowser
+
 #setup
 app = Ursina()
 #seed & shader
@@ -19,6 +20,7 @@ zombies_remaining = 0
 kill_zombie = False
 wave = -1
 money = 0
+xp_total = 0
 
 #invoker func
 def buy_screen_pause_invoker():
@@ -109,6 +111,7 @@ hp_bar = healthbar_dynamtic()
 wave_ui_counter = Text(text=("WAVE " + str(wave)), font='assets/Enchanted_Land.otf', scale=2, origin=(0,0), y=.45, x=-.45)
 wave_ui_counter.create_background(padding=0.01, radius=0.01, color=color.red)
 money_counter = Text(text="$"+str(money), scale=2, origin=(0,0), y=.35, x=-.71)
+
 # In Game Ui -----------In Game Ui ----------- In Game Ui ------------------------------------
 def update():
     global gun_selected
@@ -475,6 +478,14 @@ main_menu_bg = Entity(parent=camera.ui,model='quad',scale_x=1.78,scale_y=1,origi
 instructions_menu_bg = Entity(parent=camera.ui,model='quad',scale_x=1.78,scale_y=1,origin=(0,0),texture = 'instructions_menu_bg.png')
 pause_bg = Entity(parent=camera.ui,model='quad',scale_x=1.78,scale_y=1,origin=(0,0),texture = 'pause_bg.png')
 shop_bg = Entity(parent=camera.ui,model='quad',scale_x=1.78,scale_y=1,origin=(0,0),texture = 'shop_bg.png')
+lose_bg = Entity(parent=camera.ui,model='quad',scale_x=1.78,scale_y=1,origin=(0,0),texture = 'you_lose.png')
+win_bg = Entity(parent=camera.ui,model='quad',scale_x=1.78,scale_y=1,origin=(0,0),texture = 'you_win.png')
+#lose items
+xp_counter = Text(text=str(xp_total), scale=2, text_color=color.white, origin=(-1,0), y=0.012, x=-.22) 
+menu_from_dead_btn = Button(text='Main Menu', color=color.white, scale_x=.4,  position=(0.5,-.12,0), scale_y=.1, text_origin=(0,0))
+share_btn = Button(text='Share your Final Score', color=color.white, scale_x=.4,  position=(.08,-.12,0), scale_y=.1, text_origin=(0,0))
+#win items
+menu_from_win_btn = Button(text='Main Menu', color=color.green, scale_x=.4,  position=(0,-.12,0), scale_y=.1, text_origin=(0,0))
 
 
 #main menu function
@@ -483,6 +494,7 @@ def main_menu():
     main_menu_bg.visible = True
     player.cursor.enabled = True
     mouse.locked = False
+    xp_counter.visible = False
     gun.enabled = False
     paused_screen = False
     pause_bg.visible = False
@@ -499,7 +511,12 @@ def main_menu():
     menu_from_game_btn.visible = False
     instruction_back_btn.visible = False
     instructions_menu_bg.visible = False
-    menu_from_game_btn.enable()
+    menu_from_dead_btn.visible = False
+    share_btn.visible = False
+    win_bg.visible = False
+    menu_from_win_btn.visible = False
+    menu_from_win_btn.disable()
+    menu_from_dead_btn.disable()
     resume_btn.enable()
     instruction_back_btn.disable()
     menu_from_game_btn.disable()
@@ -513,13 +530,18 @@ def main_menu():
     buy_6_btn.disable()
     buy_7_btn.disable()
     buy_8_btn.disable()
-
+    lose_bg.visible = False
+    share_btn.visible = False
+    share_btn.disable()
 
 #instructions menu function
 def instructions_menu():
+    
     instructions_menu_bg.visible = True
     main_menu_bg.visible = False
     player.cursor.enabled = True
+    shop_bg.visible = False
+    lose_bg.visible = False
     mouse.locked = False
     gun.enabled = False
     player.visible_self = False
@@ -535,18 +557,85 @@ def instructions_menu():
     instruction_back_btn.visible = True
     instruction_back_btn.enable()
 
+def you_lose_menu():
+    global paused_screen, is_game_running
+    paused_screen = True
+    is_game_running = False
+    instructions_menu_bg.visible = False
+    main_menu_bg.visible = False
+    player.cursor.enabled = True
+    mouse.locked = False
+    gun.enabled = False
+    player.visible_self = False
+    application.paused = True
+    editor_camera.enabled = True
+    editor_camera.position = player.position
+    play_btn.disable()
+    instruction_btn.disable()
+    exit_btn.disable()
+    player.cursor.disable()
+    resume_btn.visible = False
+    menu_from_game_btn.visible = False
+    instruction_back_btn.visible = False
+    instruction_back_btn.disable()
+    lose_bg.visible = True
+    menu_from_dead_btn.visible = True
+    menu_from_dead_btn.enable()
+    xp_counter.visible = True
+    xp_counter.text = str(xp_total)
+    share_btn.visible = True
+    share_btn.enable()
+    win_bg.visible = False
+    menu_from_win_btn.visible = False
+    menu_from_win_btn.disable()
+
+    
+def you_win_menu():
+    global paused_screen, is_game_running
+    paused_screen = True
+    is_game_running = False
+    instructions_menu_bg.visible = False
+    main_menu_bg.visible = False
+    player.cursor.enabled = True
+    mouse.locked = False
+    gun.enabled = False
+    player.visible_self = False
+    application.paused = True
+    editor_camera.enabled = True
+    editor_camera.position = player.position
+    play_btn.disable()
+    instruction_btn.disable()
+    exit_btn.disable()
+    player.cursor.disable()
+    resume_btn.visible = False
+    menu_from_game_btn.visible = False
+    instruction_back_btn.visible = False
+    instruction_back_btn.disable()
+    lose_bg.visible = False
+    menu_from_dead_btn.visible = False
+    xp_counter.visible = False
+    share_btn.visible = False
+    share_btn.disable()
+    win_bg.visible = True
+    menu_from_win_btn.visible = True
+    menu_from_win_btn.enable()
+
+
 #open shop menu
 def shop_menu(key):
     global is_game_running, paused_screen, buy_screen
     if key == 'b' and is_game_running and not paused_screen: 
         shop_bg.visible = not shop_bg.visible
         buy_screen = not buy_screen
+        lose_bg.visible = False
         editor_camera.enabled = not editor_camera.enabled
         player.visible_self = editor_camera.enabled
         player.cursor.enabled = not editor_camera.enabled
         gun.enabled = not editor_camera.enabled
         mouse.locked = not editor_camera.enabled
         editor_camera.position = player.position
+        menu_from_win_btn.visible = False
+        menu_from_win_btn.disable()
         application.paused = editor_camera.enabled
         if shop_bg.visible == False:
             buy_pistol_btn.disable()
@@ -565,8 +654,6 @@ def shop_menu(key):
             buy_4_btn.enable()
             buy_5_btn.enable()
             buy_6_btn.enable()
-            #buy_7_btn.enable() ammo refil btn
-            #buy_8_btn.enable() stopwatch button
 
 #shop handler (watches for keyboard press)
 pause_handler = Entity(ignore_paused=True, input=shop_menu)
@@ -577,7 +664,7 @@ def game_is_running():
     kill_zombie = False
 #new game function
 def play_new_game():
-    global is_game_running, player, buy_screen,gun_selected, zombies_remaining, wave, kill_zombie, money,hpleft,healthbar_dynamtic,hp_bar
+    global is_game_running, player, buy_screen,gun_selected, zombies_remaining, wave, kill_zombie, money,hpleft,healthbar_dynamtic,hp_bar,xp_total
     kill_zombie = True
     invoke(game_is_running,delay=.15)
     player.cursor.enabled = True
@@ -588,6 +675,7 @@ def play_new_game():
     gun_selected = "knife"
     ak.enable = False
     ak.visible = False
+    lose_bg.visible = False
     sub_machinegun.enable = False
     sub_machinegun.visible = False
     tommy.enable = False
@@ -616,18 +704,15 @@ def play_new_game():
     player.position = (0,15,0)
     zombies_remaining = 0
     wave = -1
+    xp_total = 0
     money = 999990
     money_counter.text = "$"+ str(money)
     hpleft = 0.22
     healthbar_dynamtic.max_health(hp_bar)
-
-
-
 #invoker func
 def toggle_pause_invoker():
     global paused_screen
     paused_screen = not paused_screen
-
 #pause game with escape key
 def pause_input(key):
     global is_game_running, paused_screen, buy_screen
@@ -667,10 +752,9 @@ def resume_input():
     application.paused = editor_camera.enabled
     menu_from_game_btn.visible = not menu_from_game_btn.visible
     resume_btn.visible = not resume_btn.visible
+    
     menu_from_game_btn.disable()
     resume_btn.disable()
-
-
 
 class Enemy(Entity):
     global hp_bar, wave
@@ -692,13 +776,24 @@ class Enemy(Entity):
 
 
             if dist < 0.2:
-                global zombies_remaining, healthbar_dynamtic, zombies_remaining_ui_counter
-                #print("Lost hp")
-                healthbar_dynamtic.reduce_player_health(hp_bar)
-                destroy(self)
-                zombies_remaining = zombies_remaining - 1
-                zombies_remaining_ui_counter.text = str(zombies_remaining)
-                return
+                global zombies_remaining, healthbar_dynamtic, zombies_remaining_ui_counter, hpleft
+                print(hpleft) 
+                if round(hpleft, 2) == 0.02:
+                    you_lose_menu()
+                    return
+                else:
+
+
+
+                    healthbar_dynamtic.reduce_player_health(hp_bar)
+                    destroy(self)
+
+                
+
+
+                    zombies_remaining = zombies_remaining - 1
+                    zombies_remaining_ui_counter.text = str(zombies_remaining)
+                    return
             
 
 
@@ -716,19 +811,20 @@ class Enemy(Entity):
 
     @hp.setter
     def hp(self, value):
-        global zombies_remaining, zombies_remaining_ui_counter,wave,money,money_counter
+        global zombies_remaining, zombies_remaining_ui_counter,wave,money,money_counter,xp_total
         self._hp = value + wave
         if value <= 0:
             zombies_remaining = zombies_remaining - 1
             zombies_remaining_ui_counter.text = str(zombies_remaining)
             money = money + 100
+            xp_total = xp_total + 150
             money_counter.text = "$"+ str(money)
+            xp_counter.text = str(xp_total)
             destroy(self)
             return
 
         self.health_bar.world_scale_x = self.hp / self.max_hp * 1.5
         self.health_bar.alpha = 1
-
 
 class Boss(Entity):
     def __init__(self, **kwargs):
@@ -742,20 +838,26 @@ class Boss(Entity):
     def update(self):
         dist = distance_xz(player.position, self.position)
 
-        if dist < 0.2:
-            global zombies_remaining
-            #print("Lost hp")
+        if kill_zombie:
+            print("killing zombie to start new round")
             destroy(self)
-            zombies_remaining = zombies_remaining - 1
-            return
-        
+        else:
 
 
-        self.health_bar.alpha = max(0, self.health_bar.alpha - time.dt)
-        self.position += self.forward * time.dt * 5 * (0.5 * wave)
+            if dist < 0.2:
+                global zombies_remaining, healthbar_dynamtic, zombies_remaining_ui_counter
+                #print("Lost hp")
+                you_lose_menu()
+            
 
-        self.look_at_2d(player.position, 'y')
+
+            self.health_bar.alpha = max(0, self.health_bar.alpha - time.dt)
+            self.position += self.forward * time.dt / 1.2
+
+            self.look_at_2d(player.position, 'y')
         #hit_info = raycast(self.world_position + Vec3(0,1,0), self.forward, 30, ignore=(self,))
+
+    
      
     @property
     def hp(self):
@@ -766,6 +868,7 @@ class Boss(Entity):
         global zombies_remaining, zombies_remaining_ui_counter,wave
         self._hp = value + wave
         if value <= 0:
+            you_win_menu()
             zombies_remaining = zombies_remaining - 1
             zombies_remaining_ui_counter.text = str(zombies_remaining)
             destroy(self)
@@ -774,12 +877,11 @@ class Boss(Entity):
         self.health_bar.world_scale_x = self.hp / self.max_hp * 1.5
         self.health_bar.alpha = 1
 
-
 def send_new_wave():
     #LOGIC TO SEND NEW WAVE
     global wave, enemies
     difficulty = 1.5
-    if wave < 80:
+    if wave < 10:
         enemies = [Enemy(x=x+randint(-50,50), z=x+randint(-50,50)) for x in range(floor(wave*difficulty))]
         wave = wave+1
         print(len(enemies))
@@ -789,6 +891,10 @@ def send_new_wave():
         enemies = Boss(x=40)
         wave_ui_counter.text = "BOSS  WAVE"
         wave_ui_counter.create_background(padding=0.01, radius=0.01, color=color.red)
+
+def share():
+    global xp_total
+    webbrowser.open("http://twitter.com/intent/tweet?text=My%20Score%20On%20Island%20Runner%20was%20"+str(xp_total))
 
 #btn onclick
 play_btn.on_click = play_new_game
@@ -803,6 +909,11 @@ buy_smg_btn.on_click = submachine_gun_selected
 buy_4_btn.on_click = tommy_gun_selected
 buy_6_btn.on_click = sniper_gun
 buy_5_btn.on_click = m249
+menu_from_dead_btn.on_click = main_menu
+share_btn.on_click = share
+menu_from_win_btn.on_click = main_menu
+
+
 
 #sun / lighting logic
 sun = DirectionalLight()
