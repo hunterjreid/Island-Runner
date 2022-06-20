@@ -1,4 +1,5 @@
 #prerequisites
+from turtle import position
 from ursina import *
 from ursina.prefabs.first_person_controller import FirstPersonController
 from ursina.shaders import lit_with_shadows_shader
@@ -48,7 +49,7 @@ bossgun_dmg = 0.5
 
 ##### SETTINGS ##### SETTINGS ##### SETTINGS ##### SETTINGS ##### SETTINGS ##### SETTINGS ##### SETTINGS #####
 #world
-ground = Entity(model='plane', collider='box', scale=64, texture='grass', texture_scale=(4,4))
+ground = Entity(model='plane', collider='box', scale=256, texture='grass', texture_scale=(4,4))
 #FPS handler
 editor_camera = EditorCamera(enabled=False, ignore_paused=True)
 player = FirstPersonController(model='cube', z=-10, color=color.orange, origin_y=-.5, speed=(8*player_speed_multiplier))
@@ -92,7 +93,7 @@ bossgun.visible = False
 class healthbar_dynamtic(Entity): #health bar dynamic
     global hpleft
     def __init__(self):
-        super().__init__(parent=camera.ui, model='quad', scale=0.03,   scale_x=hpleft,    origin=(-0.5,-0), y=.44, x=-0.179,  color=color.green,   texture = 'health.png')
+        super().__init__(parent=camera.ui, model='quad', scale=0.03, scale_x=hpleft, origin=(-0.5,-0), y=.44, x=-0.179, color=color.green, texture = 'health.png')
     def reduce_player_health(self):
         global hpleft
         hpleft = hpleft - 0.02
@@ -135,6 +136,7 @@ def update():
         else:
             if held_keys['left mouse']:
                 shoot()
+#shootFunc
 def shoot():
     global gun_selected
     if gun_selected == "pistol":
@@ -453,8 +455,10 @@ def m249():
     knife.enable = False
     knife.visible = False
 #raycast controller
+
 shootables_parent = Entity()
 mouse.traverse_target = shootables_parent
+
 #main menu items
 play_btn = Button(text='Play New Game', color=color.gray, scale_x=.7, scale_y=.1, text_origin=(-.45,0))
 instruction_btn = Button(text='Instructions', color=color.gray, position=(0,-.12,0), scale_x=.7, scale_y=.1, text_origin=(-.45,0))
@@ -486,7 +490,6 @@ menu_from_dead_btn = Button(text='Main Menu', color=color.white, scale_x=.4,  po
 share_btn = Button(text='Share your Final Score', color=color.white, scale_x=.4,  position=(.08,-.12,0), scale_y=.1, text_origin=(0,0))
 #win items
 menu_from_win_btn = Button(text='Main Menu', color=color.green, scale_x=.4,  position=(0,-.12,0), scale_y=.1, text_origin=(0,0))
-
 
 #main menu function
 def main_menu():
@@ -533,10 +536,8 @@ def main_menu():
     lose_bg.visible = False
     share_btn.visible = False
     share_btn.disable()
-
 #instructions menu function
 def instructions_menu():
-    
     instructions_menu_bg.visible = True
     main_menu_bg.visible = False
     player.cursor.enabled = True
@@ -556,7 +557,7 @@ def instructions_menu():
     menu_from_game_btn.visible = False
     instruction_back_btn.visible = True
     instruction_back_btn.enable()
-
+#lose menu
 def you_lose_menu():
     global paused_screen, is_game_running
     paused_screen = True
@@ -588,8 +589,7 @@ def you_lose_menu():
     win_bg.visible = False
     menu_from_win_btn.visible = False
     menu_from_win_btn.disable()
-
-    
+#win menu
 def you_win_menu():
     global paused_screen, is_game_running
     paused_screen = True
@@ -619,8 +619,6 @@ def you_win_menu():
     win_bg.visible = True
     menu_from_win_btn.visible = True
     menu_from_win_btn.enable()
-
-
 #open shop menu
 def shop_menu(key):
     global is_game_running, paused_screen, buy_screen
@@ -654,7 +652,6 @@ def shop_menu(key):
             buy_4_btn.enable()
             buy_5_btn.enable()
             buy_6_btn.enable()
-
 #shop handler (watches for keyboard press)
 pause_handler = Entity(ignore_paused=True, input=shop_menu)
 #invoker func
@@ -760,7 +757,7 @@ class Enemy(Entity):
     global hp_bar, wave
     def __init__(self, **kwargs):
         global zombies_remaining, zombies_remaining_ui_counter, wave, is_game_running
-        super().__init__(parent=shootables_parent, model='cube', origin_y=-.5, scale_y=2, color=color.light_gray, collider='box', **kwargs)
+        super().__init__(parent=shootables_parent, model='zombie', texture='zombie_texture.png', origin_y=.8, scale=0.37, position=(0,1.75,0), color=color.light_gray, collider='box', **kwargs)
         self.health_bar = Entity(parent=self, y=1.2, model='cube', color=color.red, world_scale=(1.5,.1,.1))
         self.max_hp = 70 + (wave * 3)
         self.hp = self.max_hp
@@ -829,7 +826,7 @@ class Enemy(Entity):
 class Boss(Entity):
     def __init__(self, **kwargs):
         global zombies_remaining, zombies_remaining_ui_counter, wave
-        super().__init__(parent=shootables_parent, model='cube', origin_y=-.5, scale=5, color=color.red, collider='box', **kwargs)
+        super().__init__(parent=shootables_parent, model='boss', texture='boss_texture.png', position=(0,8.75,0),  rotation=(0,90,0), origin_y=-.5, scale=0.4, collider='box', **kwargs)
         self.health_bar = Entity(parent=self, y=1.2, model='cube', color=color.red, world_scale=(5.5,.1,.1))
         self.max_hp = 2000
         self.hp = self.max_hp
@@ -842,19 +839,18 @@ class Boss(Entity):
             print("killing zombie to start new round")
             destroy(self)
         else:
-
-
             if dist < 0.2:
                 global zombies_remaining, healthbar_dynamtic, zombies_remaining_ui_counter
                 #print("Lost hp")
                 you_lose_menu()
-            
 
 
+            self.look_at_2d(player.position + Vec3(90,0,0), 'y')
             self.health_bar.alpha = max(0, self.health_bar.alpha - time.dt)
             self.position += self.forward * time.dt / 1.2
+            
 
-            self.look_at_2d(player.position, 'y')
+           
         #hit_info = raycast(self.world_position + Vec3(0,1,0), self.forward, 30, ignore=(self,))
 
     
@@ -881,7 +877,7 @@ def send_new_wave():
     #LOGIC TO SEND NEW WAVE
     global wave, enemies
     difficulty = 1.5
-    if wave < 10:
+    if wave < 3:
         enemies = [Enemy(x=x+randint(-50,50), z=x+randint(-50,50)) for x in range(floor(wave*difficulty))]
         wave = wave+1
         print(len(enemies))
