@@ -1,5 +1,6 @@
 ![Header](https://user-images.githubusercontent.com/62681404/174518800-1ac86947-de0a-4bc2-b7f4-4cd052a4ef4d.png)
-![rweew](https://user-images.githubusercontent.com/62681404/172735634-52a0c4e8-8588-4a32-ae56-2bf00570c81d.png)
+![MicrosoftTeams-image (8)](https://user-images.githubusercontent.com/62681404/174520552-5608bdd6-08ad-40e8-bc02-1b78612285fe.png)
+
 
 # Island Runner: Top Secret
 ## Run main.py to play the game, Please make sure you have Panda3d Installed and Ursina
