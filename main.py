@@ -1,16 +1,74 @@
+#       -
+#
+#       https://github.com/hunterjreid/island-runner
+#
+#       Yoobee Project
+#       Zombie Survival Game - Island Runner
+#       https://github.com/hunterjreid/island-runner
+
+
 #prerequisites
-from turtle import position
 from ursina import *
 from ursina.prefabs.first_person_controller import FirstPersonController
 from ursina.shaders import lit_with_shadows_shader
 from random import randint
 import webbrowser
-
+#HEADER
 #setup
 app = Ursina()
 #seed & shader
 random.seed(0)
 Entity.default_shader = lit_with_shadows_shader
+#island
+island = Entity(model='ground', collider='mesh', position=(0,-0.9,0), scale=32, texture='island_texture2.png')
+#sea
+sea = Entity(model='plane', collider='mesh', position=(0,-0.9,0), scale=1720, texture='water.png', texture_scale=(16,16))
+#trees
+tree1 = Entity(model='tree1', collider='mesh', scale=0.8, position=(-71.9,5.39,-75.75), texture='tree1_texture.png')
+tree2 = Entity(model='tree1', collider='mesh', scale=0.8, position=(-62.50,5.83,-73.52), texture='tree1_texture.png')
+tree3 = Entity(model='tree1', collider='mesh', scale=0.8, position=(-65.78,6.05,-60.92), texture='tree1_texture.png')
+tree4 = Entity(model='tree1', collider='mesh', scale=0.8, position=(-58.06,6.1,68.97), texture='tree1_texture.png')
+tree5 = Entity(model='tree1', collider='mesh', scale=0.8, position=(-73.23,5.87,60.52), texture='tree1_texture.png')
+tree6 = Entity(model='tree1', collider='mesh', scale=0.8, position=(-67.98,5.85,72.23), texture='tree1_texture.png')
+tree7 = Entity(model='tree1', collider='mesh', scale=0.8, position=(63.06,6.1,60.87), texture='tree1_texture.png')
+tree8 = Entity(model='tree1', collider='mesh', scale=0.8, position=(73.23,5.87,58.52), texture='tree1_texture.png')
+tree9 = Entity(model='tree1', collider='mesh', scale=0.8, position=(69.08,5.85,68.15), texture='tree1_texture.png')
+tree10 = Entity(model='tree1', collider='mesh', scale=0.8, position=(58.06,6.1,-68.97), texture='tree1_texture.png')
+tree11 = Entity(model='tree1', collider='mesh', scale=0.8, position=(73.23,5.87,-60.52), texture='tree1_texture.png')
+tree12 = Entity(model='tree1', collider='mesh', scale=0.8, position=(67.98,5.85,-72.23), texture='tree1_texture.png')
+tree13 = Entity(model='tree1', collider='mesh', scale=0.8, position=(0,7.9,0), texture='tree1_texture.png')
+tree14 = Entity(model='tree1', collider='mesh', scale=0.8, position=(10,7.9,0), texture='tree1_texture.png')
+tree15 = Entity(model='tree1', collider='mesh', scale=0.8, position=(0,7.9,-10), texture='tree1_texture.png')
+#rocks
+rock1 = Entity(model='rocks', collider='mesh', scale=1, position=(7.9,6.3,-53.97), texture='rocks_texture.png')
+rock2 = Entity(model='rocks', collider='mesh', scale=1, rotation=(0,23,0), position=(19.76,6.2,-24.62), texture='rocks_texture.png')
+rock3 = Entity(model='rocks', collider='mesh', scale=1, position=(54.59,6.3,18.72), texture='rocks_texture.png')
+rock4 = Entity(model='rocks', collider='mesh', scale=1, rotation=(0,123,0), position=(35.76,6.4,49.62), texture='rocks_texture.png')
+rock5 = Entity(model='rocks', collider='mesh', scale=1, position=(-18.19,5.3,90.97), texture='rocks_texture.png')
+rock6 = Entity(model='rocks', collider='mesh', scale=1, rotation=(0,200,0), position=(-49.89,5.2,77.07), texture='rocks_texture.png')
+#sky
+skybox_image = load_texture("skybox_new.png")
+Sky(texture=skybox_image)
+##### SETTINGS ##### SETTINGS ##### SETTINGS ##### SETTINGS ##### SETTINGS ##### SETTINGS ##### SETTINGS #####
+
+# Here you can adjust the look and feel of the game.
+player_speed_multiplier = 1.25
+
+#Gun Settings
+pistol_rate_of_fire = 0.7
+
+ak_rate_of_fire = 0.15
+
+submachinegun_rate_of_fire = 0.33
+
+tommygun_rate_of_fire = 0.07
+
+sniper_rate_of_fire = 0.9
+
+bossgun_rate_of_fire = 0.03
+
+
+##### SETTINGS END ##### SETTINGS END ##### SETTINGS ##### SETTINGS END ##### SETTINGS ##### SETTINGS END ##### SETTINGS ##### END
 #static game conf vars
 hpleft = 0.22 # dont change 0.22 is a sizer
 is_game_running = False
@@ -22,40 +80,19 @@ kill_zombie = False
 wave = -1
 money = 0
 xp_total = 0
-
+#BODY
 #invoker func
 def buy_screen_pause_invoker():
     global buy_screen
     buy_screen = not buy_screen
-
-##### SETTINGS ##### SETTINGS ##### SETTINGS ##### SETTINGS ##### SETTINGS ##### SETTINGS ##### SETTINGS #####
-
-# Here you can adjust the look and feel of the game.
-player_speed_multiplier = 1.25
-
-#Gun Settings
-pistol_rate_of_fire = 0.7
-pistol_dmg = 0.2
-ak_rate_of_fire = 0.15
-ak_dmg = 0.35
-submachinegun_rate_of_fire = 0.33
-submachinegun_dmg = 0.35
-tommygun_rate_of_fire = 0.07
-tommygun_dmg = 0.5
-sniper_rate_of_fire = 0.9
-sniper_dmg = 0.35
-bossgun_rate_of_fire = 0.03
-bossgun_dmg = 0.5
-
-##### SETTINGS ##### SETTINGS ##### SETTINGS ##### SETTINGS ##### SETTINGS ##### SETTINGS ##### SETTINGS #####
-#world
-ground = Entity(model='plane', collider='box', scale=256, texture='grass', texture_scale=(4,4))
 #FPS handler
 editor_camera = EditorCamera(enabled=False, ignore_paused=True)
-player = FirstPersonController(model='cube', z=-10, color=color.orange, origin_y=-.5, speed=(8*player_speed_multiplier))
+player = FirstPersonController(model='cube',  z=-10, color=color.orange, origin_y=-.5, speed=(8*player_speed_multiplier))
 player.cursor = Entity(parent=camera.ui, model='quad', color=color.red, scale=0.006, rotation_z=45) 
 player.collider = BoxCollider(player, Vec3(0,1,0), Vec3(1,2,1))
 player.visible_self = False
+player.jumping = False
+
 #gun(s) && knife
 knife = Entity(model='knife', rotation=(0,210,0), scale=0.1, texture="knife.png", parent=camera, position=(-.2,-.25,.34), origin_z=-.5, on_cooldown=False)
 #pistol
@@ -107,19 +144,22 @@ class healthbar_dynamtic(Entity): #health bar dynamic
 healthbar_png = Entity( parent=camera.ui, model='quad', scale=0.07, scale_x=0.3,origin=(0,0), y=.45, x=-0.1, texture = 'healthbar.png')
 #zombie remaining counter
 zombies_remaining_ui_counter = Text(text=str(zombies_remaining), font='assets/ppg.ttf', scale=2, origin=(0,0), y=.45, x=-.67)
-zombie_png = Entity( parent=camera.ui,model='quad',scale=0.08,origin=(0,0), y=.45, x=-.75, texture = 'zombie_counter_remaining.png')
+zombie_png = Entity( parent=camera.ui,model='quad',scale=0.08,origin=(0,0), y=.45, x=-.79, texture = 'zombie_counter_remaining.png')
 hp_bar = healthbar_dynamtic()
 wave_ui_counter = Text(text=("WAVE " + str(wave)), font='assets/Enchanted_Land.otf', scale=2, origin=(0,0), y=.45, x=-.45)
 wave_ui_counter.create_background(padding=0.01, radius=0.01, color=color.red)
 money_counter = Text(text="$"+str(money), scale=2, origin=(0,0), y=.35, x=-.71)
-
-# In Game Ui -----------In Game Ui ----------- In Game Ui ------------------------------------
+zombies_remaining_ui_counter.create_background(padding=0.01, radius=0.01, color=color.white)
+money_counter.create_background(padding=0.01, radius=0.01, color=color.white)
+# In Game Ui End -----------In Game Ui End ----------- In Game Ui END ------------------------------------
 def update():
     global gun_selected
     if zombies_remaining == 0 and is_game_running:
+        #send zombies
         send_new_wave()
     if not buy_screen and not paused_screen and is_game_running:
         if gun_selected == "knife":
+            #knife select
             if held_keys['left mouse']:
                 knife.rotation = (0,210,0)
                 knife.position = (-.2,-.25,.34)
@@ -134,6 +174,7 @@ def update():
                 knife.rotation = (0,274,0)
                 knife.position = (.2,-.25,.6)
         else:
+            #gun selected
             if held_keys['left mouse']:
                 shoot()
 #shootFunc
@@ -219,6 +260,7 @@ def ak47():
     
     money = money - 2500
     money_counter.text = "$"+ str(money)
+    money_counter.create_background(padding=0.01, radius=0.01, color=color.white)
 
     gun_selected = "ak47"
     shop_bg.visible = not shop_bg.visible
@@ -260,6 +302,8 @@ def pistol():
     
     money = money - 100
     money_counter.text = "$"+ str(money)
+    money_counter.create_background(padding=0.01, radius=0.01, color=color.white)
+
 
     gun_selected = "pistol"
     shop_bg.visible = not shop_bg.visible
@@ -301,6 +345,7 @@ def submachine_gun_selected():
     
     money = money - 1000
     money_counter.text = "$"+ str(money)
+    money_counter.create_background(padding=0.01, radius=0.01, color=color.white)
     gun_selected = "sub"
     shop_bg.visible = not shop_bg.visible
     invoke(buy_screen_pause_invoker,delay=.25)
@@ -341,6 +386,7 @@ def tommy_gun_selected():
     
     money = money - 5000
     money_counter.text = "$"+ str(money)
+    money_counter.create_background(padding=0.01, radius=0.01, color=color.white)
     global buy_screen, gun_selected
     gun_selected = "tommygun"
     shop_bg.visible = not shop_bg.visible
@@ -382,6 +428,7 @@ def sniper_gun():
     
     money = money - 10000
     money_counter.text = "$"+ str(money)
+    money_counter.create_background(padding=0.01, radius=0.01, color=color.white)
     gun_selected = "sniper"
     shop_bg.visible = not shop_bg.visible
     invoke(buy_screen_pause_invoker,delay=.25)
@@ -422,6 +469,7 @@ def m249():
     
     money = money - 30000
     money_counter.text = "$"+ str(money)
+    money_counter.create_background(padding=0.01, radius=0.01, color=color.white)
     gun_selected = "m249"
     shop_bg.visible = not shop_bg.visible
     invoke(buy_screen_pause_invoker,delay=.25)
@@ -697,13 +745,14 @@ def play_new_game():
     menu_from_game_btn.disable()
     resume_btn.disable()
     player.camera_pivot.rotation = (0,0,0)
-    player.rotation = (0,0,0)
-    player.position = (0,15,0)
+    player.rotation = (0,90,0)
+    player.position = (10,15,10)
     zombies_remaining = 0
     wave = -1
     xp_total = 0
-    money = 999990
+    money = 9999
     money_counter.text = "$"+ str(money)
+    money_counter.create_background(padding=0.01, radius=0.01, color=color.white)
     hpleft = 0.22
     healthbar_dynamtic.max_health(hp_bar)
 #invoker func
@@ -749,37 +798,38 @@ def resume_input():
     application.paused = editor_camera.enabled
     menu_from_game_btn.visible = not menu_from_game_btn.visible
     resume_btn.visible = not resume_btn.visible
-    
     menu_from_game_btn.disable()
     resume_btn.disable()
 
+# Zombie Class
 class Enemy(Entity):
     global hp_bar, wave
     def __init__(self, **kwargs):
         global zombies_remaining, zombies_remaining_ui_counter, wave, is_game_running
-        super().__init__(parent=shootables_parent, model='zombie', texture='zombie_texture.png', origin_y=.8, scale=0.37, position=(0,1.75,0), color=color.light_gray, collider='box', **kwargs)
+        super().__init__(parent=shootables_parent, model='zombie', texture='zombie_texture.png', origin_y=.8, scale=0.37, position=(0,12.75,0), color=color.light_gray, collider='box', **kwargs)
         self.health_bar = Entity(parent=self, y=1.2, model='cube', color=color.red, world_scale=(1.5,.1,.1))
         self.max_hp = 70 + (wave * 3)
         self.hp = self.max_hp
         zombies_remaining = zombies_remaining + 1
-        zombies_remaining_ui_counter.text = str(zombies_remaining)
+        zombies_remaining_ui_counter.text = str(zombies_remaining) + "   "
+        zombies_remaining_ui_counter.create_background(padding=0.01, radius=0.01, color=color.white)
     def update(self):
         dist = distance_xz(player.position, self.position)
 
+
+        #dist2 = distance_xz(island.world_y, self.position)
+
+
+
         if kill_zombie:
-            print("killing zombie to start new round")
             destroy(self)
         else:
-
-
             if dist < 0.2:
                 global zombies_remaining, healthbar_dynamtic, zombies_remaining_ui_counter, hpleft
-                print(hpleft) 
                 if round(hpleft, 2) == 0.02:
                     you_lose_menu()
                     return
                 else:
-
 
 
                     healthbar_dynamtic.reduce_player_health(hp_bar)
@@ -789,15 +839,28 @@ class Enemy(Entity):
 
 
                     zombies_remaining = zombies_remaining - 1
-                    zombies_remaining_ui_counter.text = str(zombies_remaining)
+                    zombies_remaining_ui_counter.text = str(zombies_remaining) + "   "
+                    zombies_remaining_ui_counter.create_background(padding=0.01, radius=0.01, color=color.white)
                     return
             
 
 
             self.health_bar.alpha = max(0, self.health_bar.alpha - time.dt)
-            self.position += self.forward * time.dt * 5
-
+            
             self.look_at_2d(player.position, 'y')
+
+
+            ray = raycast(self.world_position+(0,self.y,0), self.down, ignore=(self,))
+            if ray.hit:
+                if ray.world_point.y < 6.2:
+                    print(ray.world_point.y)
+                    self.y = ray.world_point.y + 1.6
+
+
+
+
+            self.position += self.forward * time.dt * 5 * 2
+
         #hit_info = raycast(self.world_position + Vec3(0,1,0), self.forward, 30, ignore=(self,))
 
     
@@ -812,10 +875,12 @@ class Enemy(Entity):
         self._hp = value + wave
         if value <= 0:
             zombies_remaining = zombies_remaining - 1
-            zombies_remaining_ui_counter.text = str(zombies_remaining)
+            zombies_remaining_ui_counter.text = str(zombies_remaining) + "   "
+            zombies_remaining_ui_counter.create_background(padding=0.01, radius=0.01, color=color.white)
             money = money + 100
             xp_total = xp_total + 150
             money_counter.text = "$"+ str(money)
+            money_counter.create_background(padding=0.01, radius=0.01, color=color.white)
             xp_counter.text = str(xp_total)
             destroy(self)
             return
@@ -830,8 +895,8 @@ class Boss(Entity):
         self.health_bar = Entity(parent=self, y=1.2, model='cube', color=color.red, world_scale=(5.5,.1,.1))
         self.max_hp = 2000
         self.hp = self.max_hp
-        zombies_remaining = zombies_remaining + 1
-        zombies_remaining_ui_counter.text = str(zombies_remaining)
+        zombies_remaining_ui_counter.text = str(zombies_remaining) + "   "
+        zombies_remaining_ui_counter.create_background(padding=0.01, radius=0.01, color=color.white)
     def update(self):
         dist = distance_xz(player.position, self.position)
 
@@ -866,7 +931,8 @@ class Boss(Entity):
         if value <= 0:
             you_win_menu()
             zombies_remaining = zombies_remaining - 1
-            zombies_remaining_ui_counter.text = str(zombies_remaining)
+            zombies_remaining_ui_counter.text = str(zombies_remaining) + "   "
+            zombies_remaining_ui_counter.create_background(padding=0.01, radius=0.01, color=color.white)
             destroy(self)
             return
 
@@ -877,14 +943,15 @@ def send_new_wave():
     #LOGIC TO SEND NEW WAVE
     global wave, enemies
     difficulty = 1.5
-    if wave < 3:
+    if wave < 31:
         enemies = [Enemy(x=x+randint(-50,50), z=x+randint(-50,50)) for x in range(floor(wave*difficulty))]
         wave = wave+1
-        print(len(enemies))
+        print("New Wave with " +len(enemies)+ "zombies spawning")
         wave_ui_counter.text = "WAVE  " + str(wave-1)
         wave_ui_counter.create_background(padding=0.01, radius=0.01, color=color.red)
     else:
         enemies = Boss(x=40)
+        print("Final Boss Wave")
         wave_ui_counter.text = "BOSS  WAVE"
         wave_ui_counter.create_background(padding=0.01, radius=0.01, color=color.red)
 
@@ -909,12 +976,9 @@ menu_from_dead_btn.on_click = main_menu
 share_btn.on_click = share
 menu_from_win_btn.on_click = main_menu
 
-
-
 #sun / lighting logic
 sun = DirectionalLight()
 sun.look_at(Vec3(1,-1,-1))
-Sky()
 #run main menu
 main_menu()
 #exec
