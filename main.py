@@ -853,7 +853,6 @@ class Enemy(Entity):
             ray = raycast(self.world_position+(0,self.y,0), self.down, ignore=(self,))
             if ray.hit:
                 if ray.world_point.y < 6.2:
-                    print(ray.world_point.y)
                     self.y = ray.world_point.y + 1.6
 
 
@@ -901,7 +900,6 @@ class Boss(Entity):
         dist = distance_xz(player.position, self.position)
 
         if kill_zombie:
-            print("killing zombie to start new round")
             destroy(self)
         else:
             if dist < 0.2:
@@ -946,12 +944,10 @@ def send_new_wave():
     if wave < 31:
         enemies = [Enemy(x=x+randint(-50,50), z=x+randint(-50,50)) for x in range(floor(wave*difficulty))]
         wave = wave+1
-        print("New Wave with " +len(enemies)+ "zombies spawning")
         wave_ui_counter.text = "WAVE  " + str(wave-1)
         wave_ui_counter.create_background(padding=0.01, radius=0.01, color=color.red)
     else:
         enemies = Boss(x=40)
-        print("Final Boss Wave")
         wave_ui_counter.text = "BOSS  WAVE"
         wave_ui_counter.create_background(padding=0.01, radius=0.01, color=color.red)
 
