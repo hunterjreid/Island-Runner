@@ -2,7 +2,6 @@ Trailer: https://youtu.be/FYsk3v-XyQA
 
 How To Install: https://youtu.be/CmYwy3MKYzY
 
-# Watch Video For installation guide
 
 
 ![Header](https://user-images.githubusercontent.com/62681404/174518800-1ac86947-de0a-4bc2-b7f4-4cd052a4ef4d.png)
