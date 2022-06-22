@@ -1,6 +1,6 @@
 Trailer: https://youtu.be/FYsk3v-XyQA
 
-How To Install: https://youtu.be/CmYwy3MKYzY
+How To Install video: https://youtu.be/CmYwy3MKYzY
 
 
 
