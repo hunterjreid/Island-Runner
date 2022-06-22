@@ -1,4 +1,6 @@
-https://youtu.be/FYsk3v-XyQA
+Trailer: https://youtu.be/FYsk3v-XyQA
+
+How To Install: https://youtu.be/CmYwy3MKYzY
 
 # Watch Video For installation guide
 
