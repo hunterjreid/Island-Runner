@@ -16,6 +16,7 @@ Will you survive the island?
 ![332312](https://user-images.githubusercontent.com/62681404/175191505-44ac2bd0-46e2-4dc2-b9aa-d8e4eeb64f77.png)
 ![32112323](https://user-images.githubusercontent.com/62681404/175227708-cd46510f-1402-4e67-981e-532c167f20ab.JPG)
 
+![Capture](https://user-images.githubusercontent.com/62681404/175431679-36263fc2-a388-4b6e-bed0-bdaafdee3cc4.JPG)
 
 
 
