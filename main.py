@@ -96,17 +96,17 @@ player.jumping = False
 #gun(s) && knife
 knife = Entity(model='knife', rotation=(0,210,0), scale=0.1, texture="knife.png", parent=camera, position=(-.2,-.25,.34), origin_z=-.5, on_cooldown=False)
 #pistol
-gun = Entity(model='pistol', rotation=(0,270,0), scale=0.05, texture="pistol.png", parent=camera, position=(0.2,-.25,0.7), origin_z=-.5, on_cooldown=False)
+gun = Entity(model='pistol', rotation=(0,270,0), scale=0.05, texture="pistol2.png", parent=camera, position=(0.2,-.25,0.7), origin_z=-.5, on_cooldown=False)
 gun.muzzle_flash = Entity(parent=gun, position=(5,1.3,-10), rotation=(0,-270,0), z=1, world_scale=.3, model='quad', color=color.yellow, enabled=False)
 gun.enable = False
 gun.visible = False
 #ak gun
-ak = Entity(model='ak', rotation=(0,270,0), scale=0.3, texture="ak.png", parent=camera, position=(.4,-.25,1), origin_z=-.5, on_cooldown=False)
+ak = Entity(model='ak', rotation=(0,270,0), scale=0.3, texture="ak3.png", parent=camera, position=(.4,-.25,1), origin_z=-.5, on_cooldown=False)
 ak.muzzle_flash = Entity(parent=ak, position=(3,.3,-10), rotation=(0,-270,0), z=1, world_scale=.5, model='quad', color=color.yellow, enabled=False)
 ak.enable = False
 ak.visible = False
 #submachine gun
-sub_machinegun = Entity(model='smg', rotation=(0,268,0), scale=0.25, texture="smg.png", parent=camera, position=(.4,-.35,0.9), origin_z=-.5, on_cooldown=False)
+sub_machinegun = Entity(model='smg', rotation=(0,268,0), scale=0.25, texture="smg3.png", parent=camera, position=(.4,-.35,0.9), origin_z=-.5, on_cooldown=False)
 sub_machinegun.muzzle_flash = Entity(parent=sub_machinegun, position=(5,.8,-10), rotation=(0,-270,0), z=1, world_scale=.29, model='quad', color=color.yellow, enabled=False)
 sub_machinegun.enable = False
 sub_machinegun.visible = False
@@ -116,12 +116,12 @@ tommy.muzzle_flash = Entity(parent=tommy, position=(-4.7,2,-.2), rotation=(0,-90
 tommy.enable = False
 tommy.visible = False
 #tommy gun
-sniper = Entity(model='sniper', rotation=(0,-90,0), scale=0.2, texture="sniper.png", parent=camera,  position=(.4,-0.75,1), origin_z=-.5, on_cooldown=False)
+sniper = Entity(model='sniper', rotation=(0,-90,0), scale=0.2, texture="sniper2.png", parent=camera,  position=(.4,-0.75,1), origin_z=-.5, on_cooldown=False)
 sniper.muzzle_flash = Entity(parent=sniper, position=(10,4,-10), rotation=(0,90,0), z=1, world_scale=1, model='quad', color=color.yellow, enabled=False)
 sniper.enable = False
 sniper.visible = False
 #m249 gun
-bossgun = Entity(model='b_gun', rotation=(0,270,0), scale=0.16, texture="b_gun.png", parent=camera, position=(.4,-.25,1), origin_z=-.5, on_cooldown=False)
+bossgun = Entity(model='b_gun', rotation=(0,270,0), scale=0.16, texture="b_gun3.png", parent=camera, position=(.4,-.25,1), origin_z=-.5, on_cooldown=False)
 bossgun.muzzle_flash = Entity(parent=bossgun, position=(9,.3,-10), rotation=(0,-270,0), z=1, world_scale=.5, model='quad', color=color.yellow, enabled=False)
 bossgun.enable = False
 bossgun.visible = False
@@ -158,6 +158,9 @@ def update():
         #send zombies
         send_new_wave()
     if not buy_screen and not paused_screen and is_game_running:
+        if (round(player.y, 2) == -0.9):
+            #die on water touch
+            you_lose_menu()
         if gun_selected == "knife":
             #knife select
             if held_keys['left mouse']:
@@ -508,7 +511,7 @@ shootables_parent = Entity()
 mouse.traverse_target = shootables_parent
 
 #main menu items
-play_btn = Button(text='Play New Game', color=color.gray, scale_x=.7, scale_y=.1, text_origin=(-.45,0))
+play_btn = Button(text='Play New Game', color=color.green, scale_x=.7, scale_y=.1, text_origin=(-.45,0))
 instruction_btn = Button(text='Instructions', color=color.gray, position=(0,-.12,0), scale_x=.7, scale_y=.1, text_origin=(-.45,0))
 exit_btn = Button(text='Exit', color=color.gray, scale_x=.7, position=(0,-.24,0), scale_y=.1, text_origin=(-.45,0))
 #instruction menu items
@@ -526,8 +529,8 @@ buy_6_btn = Button(text='Buy .50 caliber $10000', color=color.azure, scale_x=.3,
 buy_7_btn = Button(text='Buy Stop Watch $7500', color=color.azure, appear_sequence=1, scale_x=.3, position=(-.31,-.22,0), scale_y=.1, text_origin=(0,0))
 buy_8_btn = Button(text='Refill Ammo $1000', color=color.azure, scale_x=.3, appear_sequence=1, position=(0,-.22,0), scale_y=.1, text_origin=(0,0))
 #backgrounds
-main_menu_bg = Entity(parent=camera.ui,model='quad',scale_x=1.78,scale_y=1,origin=(0,0),texture = 'main_menu_bg.png')
-instructions_menu_bg = Entity(parent=camera.ui,model='quad',scale_x=1.78,scale_y=1,origin=(0,0),texture = 'instructions_menu_bg.png')
+main_menu_bg = Entity(parent=camera.ui,model='quad',scale_x=1.78,scale_y=1,origin=(0,0),texture = 'main_menu_bg4.png')
+instructions_menu_bg = Entity(parent=camera.ui,model='quad',scale_x=1.78,scale_y=1,origin=(0,0),texture = 'instructions_menu_bg3.png')
 pause_bg = Entity(parent=camera.ui,model='quad',scale_x=1.78,scale_y=1,origin=(0,0),texture = 'pause_bg.png')
 shop_bg = Entity(parent=camera.ui,model='quad',scale_x=1.78,scale_y=1,origin=(0,0),texture = 'shop_bg.png')
 lose_bg = Entity(parent=camera.ui,model='quad',scale_x=1.78,scale_y=1,origin=(0,0),texture = 'you_lose.png')
@@ -750,7 +753,7 @@ def play_new_game():
     zombies_remaining = 0
     wave = -1
     xp_total = 0
-    money = 9999
+    money = 999999
     money_counter.text = "$"+ str(money)
     money_counter.create_background(padding=0.01, radius=0.01, color=color.white)
     hpleft = 0.22
@@ -890,29 +893,50 @@ class Enemy(Entity):
 class Boss(Entity):
     def __init__(self, **kwargs):
         global zombies_remaining, zombies_remaining_ui_counter, wave
-        super().__init__(parent=shootables_parent, model='boss', texture='boss_texture.png', position=(0,8.75,0),  rotation=(0,90,0), origin_y=-.5, scale=0.4, collider='box', **kwargs)
+        #boss texture
+        super().__init__(parent=shootables_parent, model='boss_flipped', texture='boss_texture.png', position=(0,8.75,0),  rotation=(0,270,0), origin_y=-.5, scale=0.4, collider='mesh', **kwargs)
         self.health_bar = Entity(parent=self, y=1.2, model='cube', color=color.red, world_scale=(5.5,.1,.1))
         self.max_hp = 2000
+        zombies_remaining = zombies_remaining + 1
         self.hp = self.max_hp
         zombies_remaining_ui_counter.text = str(zombies_remaining) + "   "
         zombies_remaining_ui_counter.create_background(padding=0.01, radius=0.01, color=color.white)
     def update(self):
         dist = distance_xz(player.position, self.position)
 
+
+        #dist2 = distance_xz(island.world_y, self.position)
+
+
+
         if kill_zombie:
             destroy(self)
         else:
-            if dist < 0.2:
-                global zombies_remaining, healthbar_dynamtic, zombies_remaining_ui_counter
-                #print("Lost hp")
+            if dist < 1:
+                global zombies_remaining, healthbar_dynamtic, zombies_remaining_ui_counter, hpleft
+
                 you_lose_menu()
+                return
 
 
-            self.look_at_2d(player.position + Vec3(90,0,0), 'y')
             self.health_bar.alpha = max(0, self.health_bar.alpha - time.dt)
-            self.position += self.forward * time.dt / 1.2
+            
+            self.look_at_2d(player.position, 'y')
+            
             
 
+
+            ray = raycast(self.world_position+(0,self.y,0), self.down, ignore=(self,))
+            if ray.hit:
+                if ray.world_point.y < 6.2:
+                    self.y = ray.world_point.y + 9.6
+
+
+
+
+            self.position += self.forward * time.dt * 5
+
+    
            
         #hit_info = raycast(self.world_position + Vec3(0,1,0), self.forward, 30, ignore=(self,))
 
@@ -941,7 +965,7 @@ def send_new_wave():
     #LOGIC TO SEND NEW WAVE
     global wave, enemies
     difficulty = 1.5
-    if wave < 31:
+    if wave < 2:
         enemies = [Enemy(x=x+randint(-50,50), z=x+randint(-50,50)) for x in range(floor(wave*difficulty))]
         wave = wave+1
         wave_ui_counter.text = "WAVE  " + str(wave-1)
