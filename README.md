@@ -6,9 +6,8 @@ Will you survive the island?
 
 ## How To Install video: https://youtu.be/CmYwy3MKYzY
 ![31231](https://user-images.githubusercontent.com/62681404/175191513-333e94d2-e49a-4a14-9e2c-54b5b22a5531.png)
-
-
 ![Header](https://user-images.githubusercontent.com/62681404/174518800-1ac86947-de0a-4bc2-b7f4-4cd052a4ef4d.png)
+![332312](https://user-images.githubusercontent.com/62681404/175191505-44ac2bd0-46e2-4dc2-b9aa-d8e4eeb64f77.png)
 ![MicrosoftTeams-image (10)](https://user-images.githubusercontent.com/62681404/174583167-142f54f2-e06c-4dbe-9948-db44c218b2f3.png)
 ![MicrosoftTeams-image (9)](https://user-images.githubusercontent.com/62681404/174583179-bacc51ec-4cbb-4300-8f48-205be529ca0e.png)
 ![MicrosoftTeams-image (8)](https://user-images.githubusercontent.com/62681404/174520552-5608bdd6-08ad-40e8-bc02-1b78612285fe.png)
