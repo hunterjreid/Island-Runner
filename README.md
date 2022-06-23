@@ -17,11 +17,14 @@ Will you survive the island?
 ![32112323](https://user-images.githubusercontent.com/62681404/175227708-cd46510f-1402-4e67-981e-532c167f20ab.JPG)
 
 ![Capture](https://user-images.githubusercontent.com/62681404/175431679-36263fc2-a388-4b6e-bed0-bdaafdee3cc4.JPG)
+![1233133](https://user-images.githubusercontent.com/62681404/175433247-a3172287-59c9-4f24-94cf-f69218756209.png)
 
 
 
 ![332312](https://user-images.githubusercontent.com/62681404/175191505-44ac2bd0-46e2-4dc2-b9aa-d8e4eeb64f77.png)
-# Island Runner: Top Secret
+# OLD  
+
+Island Runner: Top Secret
 ## Run main.py to play the game, Please make sure you have Panda3d Installed and Ursina
 ![Capture](https://user-images.githubusercontent.com/62681404/171524079-7757e54e-b56e-453d-8260-9be6d005e4f4.JPG)
 ![eqweqeq](https://user-images.githubusercontent.com/62681404/171524082-efe4a237-4444-4e3a-a9cb-486c35fb702a.JPG)
