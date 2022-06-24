@@ -52,19 +52,14 @@ Sky(texture=skybox_image)
 ##### SETTINGS ##### SETTINGS ##### SETTINGS ##### SETTINGS ##### SETTINGS ##### SETTINGS ##### SETTINGS #####
 
 # Here you can adjust the look and feel of the game.
-player_speed_multiplier = 1.25
+player_speed_multiplier = 1.45
 
 #Gun Settings
 pistol_rate_of_fire = 0.7
-
 ak_rate_of_fire = 0.15
-
 submachinegun_rate_of_fire = 0.33
-
 tommygun_rate_of_fire = 0.07
-
 sniper_rate_of_fire = 0.9
-
 bossgun_rate_of_fire = 0.03
 
 
@@ -94,7 +89,11 @@ player.visible_self = False
 player.jumping = False
 
 #gun(s) && knife
-knife = Entity(model='knife', rotation=(0,210,0), scale=0.1, texture="knife.png", parent=camera, position=(-.2,-.25,.34), origin_z=-.5, on_cooldown=False)
+pos2 = (.1,-.15,.34)
+rot3 = (0,345,-10)
+pos = (.1,-.15,.34)
+rot = (0,314,0)
+knife = Entity(model='k', rotation=(10,210,0), scale=0.02, texture="k3.png", parent=camera, position=pos, origin_z=-.5, on_cooldown=False)
 #pistol
 gun = Entity(model='pistol', rotation=(0,270,0), scale=0.05, texture="pistol2.png", parent=camera, position=(0.2,-.25,0.7), origin_z=-.5, on_cooldown=False)
 gun.muzzle_flash = Entity(parent=gun, position=(5,1.3,-10), rotation=(0,-270,0), z=1, world_scale=.3, model='quad', color=color.yellow, enabled=False)
@@ -153,7 +152,7 @@ zombies_remaining_ui_counter.create_background(padding=0.01, radius=0.01, color=
 money_counter.create_background(padding=0.01, radius=0.01, color=color.white)
 # In Game Ui End -----------In Game Ui End ----------- In Game Ui END ------------------------------------
 def update():
-    global gun_selected
+    global gun_selected, rot, rot3, pos, pos2
     if zombies_remaining == 0 and is_game_running:
         #send zombies
         send_new_wave()
@@ -162,10 +161,11 @@ def update():
             #die on water touch
             you_lose_menu()
         if gun_selected == "knife":
+            global rot, rot3, pos, pos2
             #knife select
             if held_keys['left mouse']:
-                knife.rotation = (0,210,0)
-                knife.position = (-.2,-.25,.34)
+                knife.rotation = rot3
+                knife.position = pos2
                 if mouse.hovered_entity and hasattr(mouse.hovered_entity, 'hp'):
                     dist = distance_xz(player.position, mouse.hovered_entity.position)
                     if dist > 2:
@@ -174,8 +174,8 @@ def update():
                         mouse.hovered_entity.hp -= 100
                         mouse.hovered_entity.blink(color.red)
             else:
-                knife.rotation = (0,274,0)
-                knife.position = (.2,-.25,.6)
+                knife.rotation = rot
+                knife.position = pos
         else:
             #gun selected
             if held_keys['left mouse']:
@@ -260,11 +260,9 @@ def ak47():
     global buy_screen, gun_selected, money, money_counter
     if money < 2500:
         return
-    
     money = money - 2500
     money_counter.text = "$"+ str(money)
     money_counter.create_background(padding=0.01, radius=0.01, color=color.white)
-
     gun_selected = "ak47"
     shop_bg.visible = not shop_bg.visible
     invoke(buy_screen_pause_invoker,delay=.25)
@@ -302,12 +300,9 @@ def pistol():
     global buy_screen, gun_selected, money, money_counter
     if money < 100:
         return
-    
     money = money - 100
     money_counter.text = "$"+ str(money)
     money_counter.create_background(padding=0.01, radius=0.01, color=color.white)
-
-
     gun_selected = "pistol"
     shop_bg.visible = not shop_bg.visible
     invoke(buy_screen_pause_invoker,delay=.25)
@@ -345,7 +340,6 @@ def submachine_gun_selected():
     global buy_screen, gun_selected, money, money_counter
     if money < 1000:
         return
-    
     money = money - 1000
     money_counter.text = "$"+ str(money)
     money_counter.create_background(padding=0.01, radius=0.01, color=color.white)
@@ -386,7 +380,6 @@ def tommy_gun_selected():
     global buy_screen, gun_selected, money, money_counter
     if money < 5000:
         return
-    
     money = money - 5000
     money_counter.text = "$"+ str(money)
     money_counter.create_background(padding=0.01, radius=0.01, color=color.white)
@@ -428,7 +421,6 @@ def sniper_gun():
     global buy_screen, gun_selected, money, money_counter
     if money < 10000:
         return
-    
     money = money - 10000
     money_counter.text = "$"+ str(money)
     money_counter.create_background(padding=0.01, radius=0.01, color=color.white)
@@ -469,7 +461,6 @@ def m249():
     global buy_screen, gun_selected, money, money_counter
     if money < 30000:
         return
-    
     money = money - 30000
     money_counter.text = "$"+ str(money)
     money_counter.create_background(padding=0.01, radius=0.01, color=color.white)
@@ -505,8 +496,8 @@ def m249():
     bossgun.visible = True
     knife.enable = False
     knife.visible = False
+    
 #raycast controller
-
 shootables_parent = Entity()
 mouse.traverse_target = shootables_parent
 
@@ -818,12 +809,6 @@ class Enemy(Entity):
         zombies_remaining_ui_counter.create_background(padding=0.01, radius=0.01, color=color.white)
     def update(self):
         dist = distance_xz(player.position, self.position)
-
-
-        #dist2 = distance_xz(island.world_y, self.position)
-
-
-
         if kill_zombie:
             destroy(self)
         else:
@@ -833,40 +818,20 @@ class Enemy(Entity):
                     you_lose_menu()
                     return
                 else:
-
-
                     healthbar_dynamtic.reduce_player_health(hp_bar)
                     destroy(self)
-
-                
-
-
                     zombies_remaining = zombies_remaining - 1
                     zombies_remaining_ui_counter.text = str(zombies_remaining) + "   "
                     zombies_remaining_ui_counter.create_background(padding=0.01, radius=0.01, color=color.white)
                     return
-            
-
-
             self.health_bar.alpha = max(0, self.health_bar.alpha - time.dt)
-            
             self.look_at_2d(player.position, 'y')
-
-
             ray = raycast(self.world_position+(0,self.y,0), self.down, ignore=(self,))
             if ray.hit:
                 if ray.world_point.y < 6.2:
                     self.y = ray.world_point.y + 1.6
-
-
-
-
             self.position += self.forward * time.dt * 5 * 2
 
-        #hit_info = raycast(self.world_position + Vec3(0,1,0), self.forward, 30, ignore=(self,))
-
-    
-     
     @property
     def hp(self):
         return self._hp
@@ -903,12 +868,6 @@ class Boss(Entity):
         zombies_remaining_ui_counter.create_background(padding=0.01, radius=0.01, color=color.white)
     def update(self):
         dist = distance_xz(player.position, self.position)
-
-
-        #dist2 = distance_xz(island.world_y, self.position)
-
-
-
         if kill_zombie:
             destroy(self)
         else:
@@ -920,12 +879,8 @@ class Boss(Entity):
 
 
             self.health_bar.alpha = max(0, self.health_bar.alpha - time.dt)
-            
+      
             self.look_at_2d(player.position, 'y')
-            
-            
-
-
             ray = raycast(self.world_position+(0,self.y,0), self.down, ignore=(self,))
             if ray.hit:
                 if ray.world_point.y < 6.2:
@@ -936,12 +891,7 @@ class Boss(Entity):
 
             self.position += self.forward * time.dt * 5
 
-    
-           
-        #hit_info = raycast(self.world_position + Vec3(0,1,0), self.forward, 30, ignore=(self,))
 
-    
-     
     @property
     def hp(self):
         return self._hp
@@ -977,7 +927,7 @@ def send_new_wave():
 
 def share():
     global xp_total
-    webbrowser.open("http://twitter.com/intent/tweet?text=My%20Score%20On%20Island%20Runner%20was%20"+str(xp_total))
+    webbrowser.open("https://twitter.com/intent/tweet?url=https%3A%2F%2Fbit.ly%2F3Oz8ScH&text=My%20score%20on%20Island%20Runner%20was%20"+str(xp_total)+"%20Can%20you%20Escape%20the%20Island%3F%20Download%20Here%3A")
 
 #btn onclick
 play_btn.on_click = play_new_game
