@@ -744,7 +744,7 @@ def play_new_game():
     zombies_remaining = 0
     wave = -1
     xp_total = 0
-    money = 999999
+    money = 0
     money_counter.text = "$"+ str(money)
     money_counter.create_background(padding=0.01, radius=0.01, color=color.white)
     hpleft = 0.22
@@ -886,9 +886,6 @@ class Boss(Entity):
                 if ray.world_point.y < 6.2:
                     self.y = ray.world_point.y + 9.6
 
-
-
-
             self.position += self.forward * time.dt * 5
 
 
@@ -915,7 +912,7 @@ def send_new_wave():
     #LOGIC TO SEND NEW WAVE
     global wave, enemies
     difficulty = 1.5
-    if wave < 2:
+    if wave < 30:
         enemies = [Enemy(x=x+randint(-50,50), z=x+randint(-50,50)) for x in range(floor(wave*difficulty))]
         wave = wave+1
         wave_ui_counter.text = "WAVE  " + str(wave-1)
